@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<body>
+    <canvas width="400" height="400" id="can" style="background: #000"></canvas>
+    <script>
+        var snk = [0],
+            head = null
+            dir = 1,
+            apple = 1,
+            ctx = document.getElementById('can').getContext('2d');
+        function draw(n, c) {
+            ctx.fillStyle = c;
+            ctx.fillRect(n%20*20+1,~~(n/20)*20+1,18,18);
+        }
+        document.onkeydown = function (e) {
+            var tmpdir = [-1,-20,1,20][(e||event).keyCode - 37] || dir
+            dir = snk[1]-snk[0] == tmpdir ? dir : tmpdir
+        }
+        function autorun() {
+            snk.unshift(head = snk[0] + dir);
+            if (snk.indexOf(head,1) > 0 || head<0 || head>399 || dir==-1 && head%20==19 || dir==1 && head%20==0) {
+                return alert('Game Over !')
+            }
+            draw(head, '#0f0');
+            if (head == apple) {
+                while (snk.indexOf(apple = ~~(Math.random() * 400)) >= 0);
+                draw(apple, "#f00");
+            } else {
+                draw(snk.pop(), '#000');
+            }
+            setTimeout(autorun, 130);
+        }
+        autorun();
+    </script>
+</body>
+</html>
