@@ -6,12 +6,16 @@
 </head>
 <body>
     <canvas width="400" height="400" id="can" style="background: #000"></canvas>
+    <ul>
+        <li>每10分增加1.25倍速度</li>
+    </ul>
     <script>
         var snk = [86,85],
             head = null
             dir = 1,
             apple = 87,
             score = 0,
+            speed = 300,
             ctx = document.getElementById('can').getContext('2d');
         function draw(n, c) {
             ctx.fillStyle = c;
@@ -29,12 +33,13 @@
             draw(head, '#0f0');
             if (head == apple) {
                 score++;
+                score%10 || (speed*=.8)
                 while (snk.indexOf(apple = ~~(Math.random() * 400)) >= 0);
                 draw(apple, "#f00");
             } else {
                 draw(snk.pop(), '#000');
             }
-            setTimeout(autorun, 130);
+            setTimeout(autorun, speed);
         }
         autorun();
     </script>
