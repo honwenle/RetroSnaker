@@ -68,6 +68,10 @@
         }
         autorun();
         document.onkeydown = function (e) {
+            if (e.keyCode == 32) {
+                pause = !pause;
+                !pause && autorun();
+            };
             var tmpdir = [-1,-20,1,20][(e||event).keyCode - 37] || dir
             dir = snk[1]-snk[0] == tmpdir ? dir : tmpdir
         }
