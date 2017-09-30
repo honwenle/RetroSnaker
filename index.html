@@ -3,30 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="blank">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="yes">
+    <link rel="icon" type="image/png" href="./logo.png" sizes="128x128">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="./logo.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="./logo.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="./logo.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="./logo.png">
     <title>贪吃蛇</title>
     <style>*{margin: 0;} canvas{width: 100%;}</style>
 </head>
 <body>
     <canvas width="400" height="400" id="can" style="background: #000"></canvas>
     <ul>
+        <li>键盘上下左右键或者触屏手势控制方向</li>
+        <li>空格或轻触暂停</li>
         <li>每10分增加1.25倍速度</li>
     </ul>
     <script>
         var snk = [86,85],
-            head = null
+            head = null,
             dir = 1,
             apple = 87,
-            score = 0,
+            score = 2,
             speed = 300,
+            pause = false,
             ctx = document.getElementById('can').getContext('2d');
         function draw(n, c) {
             ctx.fillStyle = c;
             ctx.fillRect(n%20*20+1,~~(n/20)*20+1,18,18);
         }
         function autorun() {
+            if (pause) return
             snk.unshift(head = snk[0] + dir);
             if (snk.indexOf(head,1) > 0 || head<0 || head>399 || dir==-1 && head%20==19 || dir==1 && head%20==0) {
-                return alert('得分：' + score);
+                confirm('得分：' + score + '，是否重来？') && reset();
+                document.title = '我的贪吃蛇长度达到了' + score;
+                return false;
             }
             draw(head, '#0f0');
             if (head == apple) {
@@ -38,6 +55,16 @@
                 draw(snk.pop(), '#000');
             }
             setTimeout(autorun, speed);
+        }
+        function reset() {
+            snk = [86,85];
+            head = null;
+            dir = 1;
+            apple = 87;
+            score = 2;
+            speed = 300;
+            ctx.clearRect(0,0,400,400);
+            autorun();
         }
         autorun();
         document.onkeydown = function (e) {
@@ -56,15 +83,22 @@
             var dtX = eX - sX,
                 dtY = eY - sY;
             if (dtX > 20 && dtX > Math.abs(dtY)) {
-                dir = 1;
+                changeDir(1);
             } else if (dtX < -20 && dtX < -Math.abs(dtY)) {
-                dir = -1;
+                changeDir(-1);
             } else if (dtY > 20) {
-                dir = 20;
+                changeDir(20);
             } else if (dtY < -20) {
-                dir = -20;
+                changeDir(-20);
+            } else {
+                pause = !pause;
+                !pause && autorun();
             }
         }, false);
+        function changeDir(d) {
+            if (pause) return
+            dir = d;
+        }
     </script>
 </body>
 </html>
