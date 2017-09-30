@@ -42,8 +42,8 @@
             snk.unshift(head = snk[0] + dir);
             if (snk.indexOf(head,1) > 0 || head<0 || head>399 || dir==-1 && head%20==19 || dir==1 && head%20==0) {
                 alert('得分：' + score);
-                reset();
                 document.title = '我的贪吃蛇长度达到了' + score;
+                reset();
                 return false;
             }
             draw(head, '#0f0');
